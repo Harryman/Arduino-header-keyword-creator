@@ -38,7 +38,19 @@ def getFunc(str,start):
 		func = sbtwn(str,funcType[2],'::','{')
 		keyword = sbtwn(str,funcType[2],'::','(')
 		tpnt = str.find('}',func[2])
-		ret = funcType[0]+func[0],keyword[0],tpnt
+		pabvcmnts = str.find('//'or'/*'or'*/',str.rfind('\n',0,funcType[1]-1),funcType[1])
+		cmnts = ''
+		if(pabvcmnts > 0):
+			if(str[pabvcmnts:pabvcmnts+1]=='*/'):
+				abvcmnts = str[rfind('/*',0,pabvcmnts):pabvcmnts]
+			else:
+				abvcmnts = str[pabvcmnts:str.find('\n', pabvcmnts)]
+			cmnts += abvcmnts 
+		pcmnts = str.find('//'or'/*',func[2],str.find('\n',func[2]))
+		if(pcmnts>0):
+			inlinecmnts = sbtwn(str, pcmnts, '{', '\n')[0]
+			cmnts += inlinecmnts
+		ret = funcType[0]+func[0],keyword[0],tpnt,cmnts
 		return ret
 	else:
 		ret = '','',-1
@@ -77,12 +89,11 @@ txt = libName+' KEYWORD3\n\n'
 while(getFunc(cpp,tpnt)[2]>0):#gets functions
 	tstr = getFunc(cpp,tpnt)
 	if(tstr[0][0] !='_'):
-		pubfunc += '    '+tstr[0]+';\n'
+		pubfunc += '    '+tstr[0]+';'+tstr[3]+'\n'
 		txt = txt+tstr[1]+' KEYWORD2\n'
 	else:
-		prifunc += '    '+tstr[0]+';\n'
-	func = sbtwn(tstr[0],0,'(',')')
-	func = func[0]+','	#gets arguments adds comma for easy looping
+		prifunc += '    '+tstr[0]+';'+tstr[3]+'\n'
+	func = sbtwn(tstr[0],0,'(',')')[0]+',' #gets arguments adds comma for easy looping
 	tidx = 0
 	while((sbtwn(func,tidx,' ',',')[2])>0): # goes through func args adding them to exclude
 		args = sbtwn(func,tidx,' ',',')
