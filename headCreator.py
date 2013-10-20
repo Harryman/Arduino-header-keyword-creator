@@ -74,7 +74,7 @@ tpnt = tpnt + len(ret)
 pubfunc += '    '+ret
 txt = libName+' KEYWORD3\n\n'
 
-while(getFunc(cpp,tpnt)[2]>0):#gets public functions
+while(getFunc(cpp,tpnt)[2]>0):#gets functions
 	tstr = getFunc(cpp,tpnt)
 	if(tstr[0][0] !='_'):
 		pubfunc += '    '+tstr[0]+';\n'
@@ -114,7 +114,7 @@ while(sbtwn(cpp, tpnt, ' ', ' = ')[2]>0):#selects anything left of an assignment
 			else:
 				privar += '    ????'+var[0]+';\n'
 
-h += pubfunc +'\n'+ pubvar + prifunc +'\n'+ privar
+h += pubfunc +'\n'+ pubvar + prifunc +'\n'+ privar+'\n};\n\n#endif'
 
 hfile = open(path[0:bpnt]+libName+'.h','w')
 hfile.write(h)
