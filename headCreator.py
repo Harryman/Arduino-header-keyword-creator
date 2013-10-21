@@ -72,6 +72,19 @@ if(os.path.isfile(path[0:bpnt]+libName+'.h')):
 	ohfilef = open(path[0:bpnt]+libName+'.h')
 	ohfile = ohfilef.read()
 	ohfilef.close()
+	tmp = ''
+	tpnt = 0
+	while(ohfile.find('/*',tpnt)>0):### Strips out all of the comments in header, simpler to match
+		tmp += ohfile[tpnt:ohfile.find('/*',tpnt)]
+		tpnt = ohfile.find('*/',tpnt)+2
+	tmp += ohfile[tpnt:]
+	tpnt = 0
+	ohfile = ''
+	while(tmp.find('//',tpnt)>0):#remove single line comments next
+		ohfile += tmp[tpnt:tmp.find('//',tpnt)]
+		tpnt = tmp.find('//',tpnt)
+		tpnt = tmp.find('\n',tpnt)
+	ohfile += tmp[tpnt:]
 
 cppfile = open(path,'r')
 cpp = cppfile.read()
