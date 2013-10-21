@@ -63,10 +63,16 @@ def getFunc(str,start):
 		ret = '','',-1
 		return ret
 
-path = input('file:')
+path = raw_input('file:')
+while(os.path.isfile(path)==False):
+	path = raw_input('try again:')
 endPoint = path.find('.cpp')
 bpnt = path.rfind('\\',0,endPoint)+1
 libName = path[bpnt:endPoint]
+
+cppfile = open(path,'r')
+cpp = cppfile.read()
+cppfile.close()	
 
 if(os.path.isfile(path[0:bpnt]+libName+'.h')):
 	ohfilef = open(path[0:bpnt]+libName+'.h')
@@ -86,9 +92,6 @@ if(os.path.isfile(path[0:bpnt]+libName+'.h')):
 		tpnt = tmp.find('\n',tpnt)
 	ohfile += tmp[tpnt:]
 
-cppfile = open(path,'r')
-cpp = cppfile.read()
-cppfile.close()
 
 h = cpp[0:cpp.find('#')-1]
 h +='\n#ifdef '+libName+'_h\n'
@@ -104,13 +107,13 @@ tpnt = cpp.find(libName+'::'+libName)
 ret = sbtwn(cpp,tpnt,'::','{')[0]+";\n"
 tpnt = tpnt + len(ret)
 pubfunc += '    '+ret
-txt = '##################################\n# Class Name\n##################################\n'+libName+' KEYWORD1\n\n##################################\n# Methods/Functions \n##################################\n'
+txt = '##################################\n# Class Name\n##################################\n'+libName+'\tKEYWORD1\n\n##################################\n# Methods/Functions \n##################################\n'
 
 while(getFunc(cpp,tpnt)[2]>0):#gets functions
 	tstr = getFunc(cpp,tpnt)
 	if(tstr[0][0] !='_'):
 		pubfunc += '    '+tstr[0]+';'+tstr[3]+'\n'
-		txt = txt+tstr[1]+' KEYWORD2\n'
+		txt = txt+tstr[1]+'\tKEYWORD2\n'
 	else:
 		prifunc += '    '+tstr[0]+';'+tstr[3]+'\n'
 	func = sbtwn(tstr[0],0,'(',')')[0]+',' #gets arguments adds comma for easy looping
@@ -163,3 +166,4 @@ hfile.close()
 txtfile = open(path[0:bpnt]+'keywords.txt','w')
 txtfile.write('# file generated using https://github.com/Harryman/Arduino-header-keyword-creator\n'+txt)
 txtfile.close()
+raw_input('done! press enter to exit')
