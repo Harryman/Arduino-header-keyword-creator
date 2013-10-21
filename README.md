@@ -14,6 +14,8 @@ Instructions
 * Copies comments from driectly above or on the same line as the function or above it 
 * creates keywords.txt with all of the public functions and libname
 * All references in the library should look like the file name YOURLIB.cpp YOURLIB will be used to parse the file and find functions etc. include your YOURLIB.h before any other includes
+* Use library https://github.com/Harryman/simple-buttons-arduino as an example of what the formatting looks like if you are still unsure how it works
+
 
 -------------------------------------------------------
 
