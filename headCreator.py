@@ -17,6 +17,10 @@
 # 
 #	Copies comments directly from the top 
 #
+# Copies comments from driectly above or on the same line as the function or above it 
+#
+# just to be on the safe side you should make copy of your exsisting header file, just incase
+#
 # creates keywords.txt with all of the public functions and libname
 #
 # All references in the library should look like the file name YOURLIB.cpp
@@ -32,21 +36,24 @@ def sbtwn(str,idx,a,b):#this finds the instance of b first then rfinds a keep in
 	ret = str[start:end],start,end
 	return ret
 
+
 def getFunc(str,start):
 	if(str.find(libName+"::",start)>0):
 		funcType = sbtwn(str,start,'\n',libName+"::")
 		func = sbtwn(str,funcType[2],'::','{')
 		keyword = sbtwn(str,funcType[2],'::','(')
 		tpnt = str.find('}',func[2])
-		pabvcmnts = str.find('//'or'/*'or'*/',str.rfind('\n',0,funcType[1]-1),funcType[1])
+
 		cmnts = ''
-		if(pabvcmnts > 0):
-			if(str[pabvcmnts:pabvcmnts+1]=='*/'):
-				abvcmnts = str[rfind('/*',0,pabvcmnts):pabvcmnts]
+		pabvcmnts = str.find('//',str.rfind('\n',0,funcType[1]-1),funcType[1])
+		if(pabvcmnts<0):
+			pabvcmnts = str.find('*/',str.rfind('\n',0,funcType[1]-1),funcType[1])
+			if(pabvcmnts > 0):
+				abvcmnts = str[str.rfind('/*',0,pabvcmnts):pabvcmnts+2]
 			else:
 				abvcmnts = str[pabvcmnts:str.find('\n', pabvcmnts)]
 			cmnts += abvcmnts 
-		pcmnts = str.find('//'or'/*',func[2],str.find('\n',func[2]))
+		pcmnts = str.find('//',func[2],str.find('\n',func[2]))
 		if(pcmnts>0):
 			inlinecmnts = sbtwn(str, pcmnts, '{', '\n')[0]
 			cmnts += inlinecmnts
@@ -79,12 +86,12 @@ pubvar = ''
 pubfunc = 'public:\n'
 privar = ''
 prifunc = '\n  private:\n'
-exclude=[]
+exclude = []
 tpnt = cpp.find(libName+'::'+libName)
 ret = sbtwn(cpp,tpnt,'::','{')[0]+";\n"
 tpnt = tpnt + len(ret)
 pubfunc += '    '+ret
-txt = libName+' KEYWORD3\n\n'
+txt = '##################################\n# Class Name\n##################################\n'+libName+' KEYWORD1\n\n##################################\n# Methods/Functions \n##################################\n'
 
 while(getFunc(cpp,tpnt)[2]>0):#gets functions
 	tstr = getFunc(cpp,tpnt)
@@ -98,12 +105,15 @@ while(getFunc(cpp,tpnt)[2]>0):#gets functions
 	while((sbtwn(func,tidx,' ',',')[2])>0): # goes through func args adding them to exclude
 		args = sbtwn(func,tidx,' ',',')
 		tidx = args[2]+1
-		exclude += args[0]
+		exclude += [args[0]]
 	tpnt = tstr[2]
 tpnt = 0
 
-while(sbtwn(cpp, tpnt, ' ', ' = ')[2]>0):#selects anything left of an assignment will not dupe
+
+while(cpp.find(' = ',tpnt)>0):#selects anything left of an assignment will not dupe
 	var = sbtwn(cpp, tpnt, ' ', ' = ')
+	if(len(var[0])>len(sbtwn(cpp,tpnt, '\t', ' = ')[0])):
+		var = sbtwn(cpp, tpnt, '\t', ' = ')
 	tpnt = var[2]+1
 	cnt = 0
 	for a in exclude:
@@ -112,13 +122,20 @@ while(sbtwn(cpp, tpnt, ' ', ' = ')[2]>0):#selects anything left of an assignment
 	if(cnt == 0):
 		exclude += [var[0]]
 		try:
-			t = ohfile.find(var[0])
-			if(t > 0):
-				t = sbtwn(ohfile,t-1,' ', ' ')
+			tp = ohfile.find(var[0])
+			if(tp > 0):
+				t = sbtwn(ohfile,tp-1,' ', ' ')
+				if(len(t[0])>len(sbtwn(ohfile,tp-1,'\t',' ')[0])):
+					t = sbtwn(ohfile,tp-1,'\t',' ')
 				if(var[0][0] != '_'):
 					pubvar += '    '+t[0]+' '+var[0]+';\n'
 				else:
 					privar += '    '+t[0]+' '+var[0]+';\n'
+			else:
+				if(var[0][0] != '_'):
+					pubvar += '    ????'+var[0]+';\n' # if no var exsists you will have to set manually
+				else:
+					privar += '    ????'+var[0]+';\n'
 		except NameError:
 			if(var[0][0] != '_'):
 				pubvar += '    ????'+var[0]+';\n' # if no file exsists you will have to set manually
@@ -128,8 +145,8 @@ while(sbtwn(cpp, tpnt, ' ', ' = ')[2]>0):#selects anything left of an assignment
 h += pubfunc +'\n'+ pubvar + prifunc +'\n'+ privar+'\n};\n\n#endif'
 
 hfile = open(path[0:bpnt]+libName+'.h','w')
-hfile.write(h)
+hfile.write('// file generated using https://github.com/Harryman/Arduino-header-keyword-creator\n\n'+h)
 hfile.close()
 txtfile = open(path[0:bpnt]+'keywords.txt','w')
-txtfile.write(txt)
+txtfile.write('# file generated using https://github.com/Harryman/Arduino-header-keyword-creator\n'+txt)
 txtfile.close()
