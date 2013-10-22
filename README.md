@@ -7,6 +7,7 @@ This is the first python script I've written so feel free to clean it up or comm
 Instructions
 ----------------------------------------------------
 * .cpp file must use explicit { }
+* Private functions & variables must start with and underscore(_) i.e. _privar
 * the variable type are pulled from the exsisting .h file
 * just to be on the safe side you should make copy of your exsisting header file, just incase
 * if there is no exsisting .h file you will have to manually enter the datatype
