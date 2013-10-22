@@ -94,7 +94,7 @@ if(os.path.isfile(path[0:bpnt]+libName+'.h')):
 
 
 h = cpp[0:cpp.find('#')-1]
-h +='\n#ifdef '+libName+'_h\n'
+h +='\n#ifndef '+libName+'_h\n'
 h += '#define '+libName+'_h\n\n'
 h += '#include "Arduino.h"\n\n'
 h += 'class '+libName+'{\n  '
