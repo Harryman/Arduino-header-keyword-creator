@@ -149,14 +149,14 @@ while(cpp.find(' = ',tpnt)>0):#selects anything left of an assignment will not d
 					privar += '    '+t[0]+' '+var[0]+';\n'
 			else:
 				if(var[0][0] != '_'):
-					pubvar += '    ????'+var[0]+';\n' # if no var exsists you will have to set manually
+					pubvar += '    //????'+var[0]+';\n' # if no var exsists you will have to set manually
 				else:
-					privar += '    ????'+var[0]+';\n'
+					privar += '    //????'+var[0]+';\n'
 		except NameError:
 			if(var[0][0] != '_'):
-				pubvar += '    ????'+var[0]+';\n' # if no file exsists you will have to set manually
+				pubvar += '    //????'+var[0]+';\n' # if no file exsists you will have to set manually
 			else:
-				privar += '    ????'+var[0]+';\n'
+				privar += '    //????'+var[0]+';\n'
 
 h += pubfunc +'\n'+ pubvar + prifunc +'\n'+ privar+'\n};\n\n#endif'
 
