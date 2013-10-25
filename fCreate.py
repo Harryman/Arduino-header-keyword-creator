@@ -80,13 +80,13 @@ class headCreator():
 			ohfilef.close()
 			tmp = ''
 			tpnt = 0
-			while(ohfile.find('/*',tpnt)>0):### Strips out all of the comments in header, simpler to match
+			while(ohfile.find('/*',tpnt)>=0):### Strips out all of the comments in header, simpler to match
 				tmp += ohfile[tpnt:ohfile.find('/*',tpnt)]
 				tpnt = ohfile.find('*/',tpnt)+2
 			tmp += ohfile[tpnt:]
 			tpnt = 0
 			ohfile = ''
-			while(tmp.find('//',tpnt)>0):#remove single line comments next
+			while(tmp.find('//',tpnt)>=0):#remove single line comments next
 				ohfile += tmp[tpnt:tmp.find('//',tpnt)]
 				tpnt = tmp.find('//',tpnt)
 				tpnt = tmp.find('\n',tpnt)
