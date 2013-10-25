@@ -36,7 +36,6 @@ head = fCreate.headCreator()
 
 class CreateHeaderCommand(sublime_plugin.TextCommand):
 	def run(self, veiw):
-		print('this is the start ########')
 		path = self.view.file_name()
 		if(path.find('.cpp')>0):
 			fCreate.headCreator.createFiles(path)

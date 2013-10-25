@@ -2,7 +2,10 @@ Arduino-header-keyword-creator
 ==============================
 The purpose of this script to make writing arduino libraries less painful by creating the header file and keywords.txt file automatically from your library. It will pull Top comments, includes, functions along with their adjacent comments, and variables with types*(see instructions)
 
-This is the first python script I've written so feel free to clean it up or comment
+This is the first python script and Sublime Text plugin I've made so the code is a bit of a mess.
+
+####This is available through Package Control 
+I haven't tested it on ST3 but it does work on ST2 for windows. I'm pretty sure this will bug out and not work Linux because of different path separators.
 
 Instructions
 ----------------------------------------------------

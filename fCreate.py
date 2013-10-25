@@ -141,7 +141,7 @@ class headCreator():
 					tp = ohfile.find(var[0])
 					if(tp > 0):
 						t = headCreator.sbtwn(ohfile,tp-1,' ', ' ')
-						if(len(t[0])>len(sbtwn(ohfile,tp-1,'\t',' ')[0])):
+						if(len(t[0])>len(headCreator.sbtwn(ohfile,tp-1,'\t',' ')[0])):
 							t = headCreator.sbtwn(ohfile,tp-1,'\t',' ')
 						if(var[0][0] != '_'):
 							pubvar += '    '+t[0]+' '+var[0]+';\n'
