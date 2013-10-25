@@ -31,16 +31,17 @@
 import os.path
 
 class headCreator():
+	@staticmethod
 	def sbtwn(str,idx,a,b):#this finds the instance of b first then rfinds a keep in mind
 		end = str.find(b,idx)
 		start = str.rfind(a,0,end)+len(a)
 		ret = str[start:end],start,end
 		return ret
 
-
-	def getFunc(str,start):
-		if(str.find(headCreator.libName+"::",start)>0):
-			funcType = headCreator.sbtwn(str,start,'\n', headCreator.libName+"::")
+	@staticmethod
+	def getFunc(str,start,libName):
+		if(str.find(libName+"::",start)>0):
+			funcType = headCreator.sbtwn(str,start,'\n',libName+"::")
 			func = headCreator.sbtwn(str,funcType[2],'::','{')
 			keyword = headCreator.sbtwn(str,funcType[2],'::','(')
 			tpnt = str.find('}',func[2])
@@ -64,7 +65,7 @@ class headCreator():
 			ret = '','',-1
 			return ret
 
-
+	@staticmethod
 	def createFiles(path):
 		endPoint = path.find('.cpp')
 		bpnt = path.rfind('\\',0,endPoint)+1
@@ -108,8 +109,8 @@ class headCreator():
 		pubfunc += '    '+ret
 		txt = '##################################\n# Class Name\n##################################\n'+libName+'\tKEYWORD1\n\n##################################\n# Methods/Functions \n##################################\n'
 
-		while(headCreator.getFunc(cpp,tpnt)[2]>0):#gets functions
-			tstr = headCreator.getFunc(cpp,tpnt)
+		while(headCreator.getFunc(cpp,tpnt,libName)[2]>0):#gets functions
+			tstr = headCreator.getFunc(cpp,tpnt,libName)
 			if(tstr[0][0] !='_'):
 				pubfunc += '    '+tstr[0]+';'+tstr[3]+'\n'
 				txt = txt+tstr[1]+'\tKEYWORD2\n'
@@ -159,7 +160,7 @@ class headCreator():
 
 		h += pubfunc +'\n'+ pubvar + prifunc +'\n'+ privar+'\n};\n\n#endif'
 
-		hfile = open(path[0:bpnt]+headCreator.libName+'.h','w')
+		hfile = open(path[0:bpnt]+libName+'.h','w')
 		hfile.write('// file generated using https://github.com/Harryman/Arduino-header-keyword-creator\n\n'+h)
 		hfile.close()
 		txtfile = open(path[0:bpnt]+'keywords.txt','w')
